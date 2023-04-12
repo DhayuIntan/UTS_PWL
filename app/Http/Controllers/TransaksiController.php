@@ -14,9 +14,13 @@ class TransaksiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $transaksi = Transaksi::all();
+        if($request->has('search')){
+            $transaksi = Transaksi::where('nama', 'LIKE', '%'. $request->search . '%')->paginate(10);
+        }else{
+            $transaksi = Transaksi::paginate(10);
+        }
         return view('transaksi.transaksi', ['transaksi' => $transaksi]);
     }
 
