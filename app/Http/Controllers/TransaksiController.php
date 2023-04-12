@@ -75,7 +75,7 @@ class TransaksiController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
+     *tes
      * @param  \App\Http\Requests\UpdateTransaksiRequest  $request
      * @param  \App\Models\Transaksi  $transaksi
      * @return \Illuminate\Http\Response
