@@ -30,7 +30,7 @@
                             <div class="form-group">
                                 <label>Nama</label>
                                 <input class="form-control @error('nama') is-invalid @enderror"
-                                    value="{{ isset($transaksi) ? $transaksi->nama : old('nama') }} " name="nama"
+                                    value="{{ $transaksi->nama ?? old('nama') }} " name="nama"
                                     type="text">
                                 @error('nama')
                                     <span class="error invalid-feedback">{{ $message }}</span>

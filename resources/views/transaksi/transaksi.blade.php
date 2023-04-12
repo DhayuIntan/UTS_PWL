@@ -37,6 +37,11 @@
                 </div>
             @endif
 
+            <form action="/transaksi" method="GET" class="d-flex" role="search">
+                <input name="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+
             <a href="{{ url('transaksi/create') }}" class="btn btn-sm btn-success my-2">
                 <i class="fas fa-plus"></i> Add Data
             </a>
@@ -84,6 +89,8 @@
                     @endif
                 </tbody>
             </table>
+
+            {{ $transaksi->links() }}
 
         </section>
         <!-- /.content -->
