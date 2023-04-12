@@ -13,7 +13,7 @@ class UpdateTransaksiRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,7 +24,6 @@ class UpdateTransaksiRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

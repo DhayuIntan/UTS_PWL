@@ -26,10 +26,18 @@
   @include('layouts.sidebar')
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    @yield('content')
-  </div>
+  @yield('content')
+  <!-- /.content-wrapper -->
   @include('layouts.footer')
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
 <!-- jQuery -->
 <script src="../../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
