@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreMobilRequest;
-use App\Http\Requests\UpdateMobilRequest;
 use App\Models\Mobil;
+use App\Models\Transaksi;
+use GuzzleHttp\Psr7\Request as Psr7Request;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class MobilController extends Controller
 {
@@ -13,9 +15,15 @@ class MobilController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->has('search')) {
+            $mobil = Mobil::where('tipe_mobil', 'LIKE', '%' . $request->search . '%')->paginate(10);
+        } else {
+            $mobil = Mobil::paginate(10);
+        }
+
+        return view('rental.mobil', ['mobil' => $mobil]);
     }
 
     /**
@@ -25,27 +33,35 @@ class MobilController extends Controller
      */
     public function create()
     {
-        //
+        return view('rental.create_mobil', ['url_form' => url('/mobil')]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreMobilRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreMobilRequest $request)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'plat_nomor' => 'required|string',
+            'merk' => 'required|string|max:50',
+            'tipe_mobil' => 'required|string|max:50',
+            'status' => 'required|string',
+        ]);
+        Mobil::create($request->except(['_token']));
+        return redirect('/mobil')
+            ->with('success', 'Data Mobil Berhasil Ditambahkan');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Mobil  $mobil
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Mobil $mobil)
+    public function show($id)
     {
         //
     }
@@ -53,34 +69,49 @@ class MobilController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Mobil  $mobil
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Mobil $mobil)
+    public function edit($id)
     {
-        //
+        $mobil = Mobil::find($id);
+        return view('rental.create_mobil')
+            ->with('mobil', $mobil)
+            ->with('url_form', url('/mobil/' . $id));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateMobilRequest  $request
-     * @param  \App\Models\Mobil  $mobil
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateMobilRequest $request, Mobil $mobil)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'plat_nomor' => 'required|string',
+            'merk' => 'required|string',
+            'tipe_mobil' => 'required|string',
+            'status' => 'required|string',
+        ]);
+
+        $data = Mobil::where('id', '=', $id)->update($request->except(['_token', '_method', 'submit']));
+        //jika data berhasil ditambahkan, akan kembali ke halaman utama
+        return redirect('mobil')
+            ->with('success', 'Mobil Berhasil ditambahkan');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Mobil  $mobil
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Mobil $mobil)
+    public function destroy($id)
     {
-        //
+        Mobil::where('id', '=', $id)->delete();
+        return redirect('mobil')
+            ->with('success', 'Mobil Berhasil Dihapus');
     }
 }

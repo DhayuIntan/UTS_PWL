@@ -1,4 +1,4 @@
-@extends('layout.template')
+@extends('layouts.template')
 @section('content')
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="card-body">
-        
+
             <form method="POST" action="{{ $url_form}}">
                 @csrf
                 {!! (isset($mobil))? method_field('PUT'): ''!!}
@@ -69,8 +69,8 @@
                     @enderror
                 </div>
                 <button class="btn btn-success" type="submit">Submit</button>
-                
-                
+
+
             </form>
           </div>
           <!-- /.card-body -->
