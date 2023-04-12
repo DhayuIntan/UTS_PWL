@@ -1,4 +1,4 @@
-@extends('layout.template')
+@extends('layouts.template')
 @section('content')
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -35,6 +35,10 @@
                     </button>
                 </div>
             </div>
+            <form action="/mobil" method="GET" class="d-flex" role="search">
+                <input name="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
             <div class="card-body">
             <a href="{{url('mobil/create')}}" class="btn btn-sm btn-success my-2">Tambah Data</a>
                 <table class="table">
@@ -45,14 +49,14 @@
                         <th>Tipe Mobil</th>
                         <th>Status</th>
                         <th>action</th>
-                       
+
                     </tr>
                     @foreach ($mobil as $id => $mb)
                     <tr>
                         <td>{{$mb->id}}</td>
                         <td>{{$mb->plat_nomor}}</td>
-                        <td>{{$mb->tipe_mobil}}</td>
                         <td>{{$mb->merk}}</td>
+                        <td>{{$mb->tipe_mobil}}</td>
                         <td>{{$mb->status}}</td>
                         <td>
                         <!-- Bikin tombol edit dan delete -->
@@ -65,8 +69,8 @@
                         </form>
                         </td>
                      </tr>
-                       
-                   
+
+
                     @endforeach
                 </table>
             </div>
@@ -77,7 +81,7 @@
             <!-- /.card-footer-->
         </div>
         <!-- /.card -->
-
+        {{ $mobil->links() }}
     </section>
     <!-- /.content -->
 </div>
