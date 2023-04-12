@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MobilController;
