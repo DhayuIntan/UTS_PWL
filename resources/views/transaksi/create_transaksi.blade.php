@@ -46,7 +46,7 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label>Plat Nomor</label>
+                                <label>No.Plat</label>
                                 <input class="form-control @error('plat') is-invalid @enderror"
                                     value="{{ isset($transaksi) ? $transaksi->plat : old('plat') }} " name="plat"
                                     type="text">
