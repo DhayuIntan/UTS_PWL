@@ -13,7 +13,7 @@ class StoreMobilRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,10 @@ class StoreMobilRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'plat_nomor' => 'required|string',
+            'merk' => 'required|string|max:50',
+            'tipe_mobil' => 'required|string|max:50',
+            'status' => 'required|string',
         ];
     }
 }

@@ -16,11 +16,22 @@ class TransaksiController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->has('search')){
-            $transaksi = Transaksi::where('nama', 'LIKE', '%'. $request->search . '%')->paginate(10);
-        }else{
+        if ($request->has('search')) {
+            if ($request->has('search')) {
+                $transaksi = Transaksi::where('nama', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('mobil', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('plat', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('tanggal_transaksi', 'LIKE', '%' . $request->search . '%')
+                    ->paginate(10)->withQueryString();
+            } else {
+                $transaksi = Transaksi::paginate(5);
+            }
+            return view('transaksi.transaksi')
+                ->with('transaksi', $transaksi);
+        } else {
             $transaksi = Transaksi::paginate(10);
         }
+
         return view('transaksi.transaksi', ['transaksi' => $transaksi]);
     }
 
@@ -42,14 +53,7 @@ class TransaksiController extends Controller
      */
     public function store(StoreTransaksiRequest $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:100',
-            'mobil' => 'required|string|max:100',
-            'plat' => 'required|string',
-            'tanggal_transaksi' => 'required|date',
-        ]);
-
-        Transaksi::create($request->except(['_token']));
+        Transaksi::create($request->validated());
         return redirect('/transaksi')
             ->with('success', 'Transaksi Berhasil Ditambahkan');
     }
@@ -62,7 +66,7 @@ class TransaksiController extends Controller
      */
     public function show(Transaksi $transaksi)
     {
-        //
+
     }
 
     /**
@@ -71,9 +75,9 @@ class TransaksiController extends Controller
      * @param  \App\Models\Transaksi  $transaksi
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Transaksi $transaksi)
     {
-        $transaksi = Transaksi::find($id);
+        $id = $transaksi->id;
         return view('transaksi.create_transaksi', ['urlform' => url("/transaksi/" . $id), 'transaksi' => $transaksi]);
     }
 
@@ -84,21 +88,11 @@ class TransaksiController extends Controller
      * @param  \App\Models\Transaksi  $transaksi
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,  $id)
+    public function update(UpdateTransaksiRequest $request, Transaksi $transaksi)
     {
-        $request->validate([
-            'nama' => 'required|string|max:100',
-            'mobil' => 'required|string|max:100',
-            'plat' => 'required|string',
-            'tanggal_transaksi' => 'required|date',
-        ]);
-
-        $requestData = $request->except(['_token', '_method']);
-        $requestData['id'] = $id;
-
-        $data = Transaksi::where('id', '=', $id)->update($requestData);
+        $transaksi->update($request->validated());
         return redirect('/transaksi')
-            ->with('success', 'Transaksi Berhasil Diedit');
+            ->with('success', 'Transaksi Berhasil Diubah');
     }
 
     /**
@@ -107,11 +101,10 @@ class TransaksiController extends Controller
      * @param  \App\Models\Transaksi  $transaksi
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Transaksi $transaksi)
     {
-        $requestData['id'] = $id;
+        $transaksi->delete();
 
-        Transaksi::where('id', '=', $id)->delete();
         return redirect('/transaksi')
             ->with('success', 'Transaksi Berhasil Dihapus');
     }

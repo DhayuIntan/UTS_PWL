@@ -21,14 +21,11 @@ use Illuminate\Support\Facades\Auth;
 //Auth::routes();
 Route::get('/logout', [LoginController::class, 'logout']);
 Route::middleware(['auth'])->group(function(){
-    Route::get('/', function () {
-        return view('index');
-    });
     Route::resource('/mobil', MobilController::class);
     Route::resource('/transaksi', TransaksiController::class);
+    Route::get('/', [App\Http\Controllers\MobilController::class, 'index']);
 });
 
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

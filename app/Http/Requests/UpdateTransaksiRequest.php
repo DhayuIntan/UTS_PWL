@@ -13,7 +13,7 @@ class UpdateTransaksiRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,6 +24,10 @@ class UpdateTransaksiRequest extends FormRequest
     public function rules()
     {
         return [
+            'nama' => 'required|string|max:100',
+            'mobil' => 'required|string|max:100',
+            'plat' => 'required|string',
+            'tanggal_transaksi' => 'required|date',
         ];
     }
 }

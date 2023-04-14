@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreMobilRequest;
 use App\Models\Mobil;
 use App\Models\Transaksi;
 use GuzzleHttp\Psr7\Request as Psr7Request;
@@ -17,11 +18,7 @@ class MobilController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->has('search')) {
-            $mobil = Mobil::where('tipe_mobil', 'LIKE', '%' . $request->search . '%')->paginate(10);
-        } else {
-            $mobil = Mobil::paginate(10);
-        }
+        $request->has('search') ? $mobil = Mobil::where('merk', 'LIKE', '%' . $request->search . '%')->paginate(10) : $mobil = Mobil::paginate(10);
 
         return view('rental.mobil', ['mobil' => $mobil]);
     }
@@ -42,15 +39,9 @@ class MobilController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreMobilRequest $request)
     {
-        $request->validate([
-            'plat_nomor' => 'required|string',
-            'merk' => 'required|string|max:50',
-            'tipe_mobil' => 'required|string|max:50',
-            'status' => 'required|string',
-        ]);
-        Mobil::create($request->except(['_token']));
+        Mobil::create($request->validated());
         return redirect('/mobil')
             ->with('success', 'Data Mobil Berhasil Ditambahkan');
     }
@@ -72,9 +63,9 @@ class MobilController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Mobil $mobil)
     {
-        $mobil = Mobil::find($id);
+        $id = $mobil->id;
         return view('rental.create_mobil')
             ->with('mobil', $mobil)
             ->with('url_form', url('/mobil/' . $id));
