@@ -18,7 +18,22 @@ class MobilController extends Controller
     public function index(Request $request)
     {
         if ($request->has('search')) {
-            $mobil = Mobil::where('tipe_mobil', 'LIKE', '%' . $request->search . '%')->paginate(10);
+            // $mobil = Mobil::where('plat_nomor', 'LIKE', '%' . $request->search . '%')->paginate(10);
+            if ($request->has('search')) {
+                $mobil = Mobil::where('plat_nomor', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('merk', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('tipe_mobil', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('status', 'LIKE', '%' . $request->search . '%')
+                    ->paginate(10)->withQueryString();
+            } else {
+                $mobil = Mobil::paginate(5);
+            }
+            return view('rental.mobil')
+                ->with('mobil', $mobil);
+
+            // $mobil = Mobil::where('merk', 'LIKE', '%' . $request->search . '%')->paginate(10);
+            // $mobil = Mobil::where('tipe_mobil', 'LIKE', '%' . $request->search . '%')->paginate(10);
+            // $mobil = Mobil::where('status', 'LIKE', '%' . $request->search . '%')->paginate(10);
         } else {
             $mobil = Mobil::paginate(10);
         }

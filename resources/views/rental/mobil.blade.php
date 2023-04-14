@@ -40,6 +40,12 @@
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <div class="card-body">
+                    <div class="card-body">
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
             <a href="{{url('mobil/create')}}" class="btn btn-sm btn-success my-2">Tambah Data</a>
                 <table class="table">
                     <tr>
@@ -53,7 +59,7 @@
                     </tr>
                     @foreach ($mobil as $id => $mb)
                     <tr>
-                        <td>{{$mb->id}}</td>
+                        <td>{{$id + $mobil->firstItem()}}</td>
                         <td>{{$mb->plat_nomor}}</td>
                         <td>{{$mb->merk}}</td>
                         <td>{{$mb->tipe_mobil}}</td>
@@ -65,7 +71,9 @@
                         <form method="POST" action="{{ url('/mobil/'.$mb->id) }}" >
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">hapus</button>
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                {{-- onclick="confirmDelete()" >hapus</button> --}}
+                                onclick="return confirm('Apakah Anda yakin? Data {{$mb->merk}} akan dihapus. Apakah Anda ingin melanjutkan?')">Hapus</button>
                         </form>
                         </td>
                      </tr>
@@ -88,8 +96,19 @@
 @endsection
 
 @push('custom_js')
-<script>
-    alert('Selamat Datang')
+    {{-- <script>
+  alert('Halaman Home')
+</script> --}}
 
-</script>
+    <script>
+        function confirmDelete() {
+            if (confirm('Apakah Anda yakin? Data akan dihapus. Apakah Anda ingin melanjutkan?')) {
+                document.getElementById('form').submit();
+            } else {
+                event.preventDefault()
+            }
+        }
+    </script>
 @endpush
+
+
